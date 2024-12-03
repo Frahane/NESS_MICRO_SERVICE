@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
+    </script>
+
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Contact Us</title>
+</head>
+<body>
+    <header>
+        <h1>Contact Us</h1>
+    </header>
+
+    <button id="back-button" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back
+    </button>
+
+    <div class="container">
+        <div class="intro">
+            <h2>Get in Touch</h2>
+            <p>If you have any questions, feel free to reach out to us!</p>
+            <p>Email: support@nessmicroservice.com</p>
+            <p>Telegram: @NESSSupport</p>
+        </div>
+        <footer>
+            &copy; <span id="year"></span> Powered by PrivateNess Network
+        </footer>
+    </div>
+
+    <!-- Include the custom JS file -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <script>
+        // Set the current year in the footer
+        const currentYear = new Date().getFullYear();
+        document.getElementById('year').textContent = currentYear;
+    </script>
+</body>
+</html>

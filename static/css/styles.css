@@ -1,0 +1,199 @@
+:root {
+  --primary-color: #1e90ff;
+  --secondary-color: #32cd32;
+  --background-color: #121212;
+  --surface-color: #1e1e1e;
+  --on-surface-color: #ffffff;
+  --text-color: #e0e0e0;
+  --muted-color: #909090;
+}
+
+body {
+  font-family: 'Roboto', Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+.container {
+  width: 95%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.back-button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 1em;
+  position: fixed; /* Make it fixed */
+  bottom: 20px; /* Position from the bottom */
+  right: 20px; /* Position from the right */
+  z-index: 1000; /* Ensure it stays on top of other elements */
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Font Awesome for the arrow icon */
+.fas {
+  margin-right: 5px;
+}
+
+header {
+  background-color: black;
+  color: white;
+  padding: 1rem 0;
+  text-align: center;
+  border: 2px solid var(--primary-color); 
+  border-radius: 0; 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  margin: 0 auto; 
+}
+
+header h1 {
+  font-size: 2.2em;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1px;
+}
+.powered {
+  font-size: 0.8em;
+}
+
+.ness-logo {
+  width: 15px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.break {
+  display: block;
+  font-size: 0.7em;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 5px;
+}
+
+.subscription-p {
+  font-size: 0.9em;
+  opacity: 0.8;
+  text-align: center;
+  margin: 20px 0;
+  color: var(--muted-color);
+}
+
+.telegram-bot-link {
+  text-decoration: none;
+  color: var(--primary-color);
+  transition: color 0.3s ease;
+}
+
+.telegram-bot-link:hover {
+  color: var(--secondary-color);
+}
+
+.dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.market-overview, .signal-alerts, .bots-overview {
+  background: var(--surface-color);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  width: calc(100% - 10px);
+}
+
+@media (max-width: 768px) {
+  .market-overview, .signal-alerts, .bots-overview {
+      width: 100%;
+  }
+}
+
+h2 {
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 10px;
+  margin-top: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
+
+th, td {
+  padding: 15px;
+  text-align: left;
+  background-color: var(--surface-color);
+}
+
+th {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.alert {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-left: 4px solid var(--secondary-color);
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 40px;
+  font-size: 0.8em;
+  color: var(--muted-color);
+  border-top: 1px solid var(--muted-color);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}

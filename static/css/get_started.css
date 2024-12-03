@@ -1,0 +1,193 @@
+:root { 
+    --primary-color: #1e90ff; 
+    --secondary-color: #32cd32; 
+    --background-color: #121212; 
+    --surface-color: #1e1e1e; 
+    --on-surface-color: #ffffff; 
+    --text-color: #e0e0e0; 
+    --muted-color: #909090; 
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .steps {
+        gap: 0.2rem; /* Smaller gap on mobile */
+    }
+
+    .step {
+        flex: 0 1 calc(100% - 0.5rem); 
+        margin: 0.2rem; /* Minimal margin */
+        padding: 0.7rem; /* Reduced padding */
+    }
+
+    .step h3 {
+        font-size: 0.7rem; /* Slightly smaller heading */
+        
+    }
+
+    .step p {
+        font-size: 0.6rem; /* Slightly smaller text */
+    }
+
+    .intro h2 { 
+        font-size: 0.7rem; 
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+    }
+}
+
+body { 
+    font-family: 'Roboto', Arial, sans-serif; 
+    margin: 0; 
+    padding: 0; 
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding: 4px 0 0;
+    opacity: 0.8;
+}
+
+header {
+    background-color: green;
+    color: white;
+    padding: 1rem 0;
+    text-align: center; 
+    border-radius: 0; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    margin: 6px auto; 
+}
+
+header h1 { 
+    margin: 0; 
+    font-size: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.intro .powered-by {
+    font-size: 0.6rem;
+}
+
+nav { 
+    background-color: var(--surface-color); 
+    padding: 0.5rem 0; 
+}
+
+nav ul { 
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+    display: flex; 
+    justify-content: center; 
+    display: flex;
+    gap: 4%;
+}
+
+nav ul li { 
+    margin: 0 1rem; 
+}
+
+nav ul li a { 
+    color: var(--primary-color);
+    text-decoration: none; 
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: var(--secondary-color);
+}
+
+.container { 
+    max-width: 98%; 
+    margin: 2rem auto; 
+    padding: 0 1rem; 
+}
+
+.intro { 
+    text-align: center; 
+    margin-bottom: 2rem; 
+}
+
+.intro h2 { 
+    font-size: 1rem; 
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.intro p { 
+    font-size: 0.8rem; 
+    color: var(--muted-color);
+}
+
+.steps {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Center steps horizontally */
+    gap: 0.5rem; /* Reduced gap between steps */
+}
+
+.step { 
+    background-color: var(--surface-color); 
+    border-radius: 8px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    flex: 1 1 calc(33.333% - 1rem); /* Adjusted flex basis */
+    margin: 0.5rem; /* Reduced margin */
+    padding: 1rem; /* Slightly reduced padding */
+    text-align: center; 
+}
+
+.step img {
+    max-width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    max-height: 200px; /* Limit image height */
+    object-fit: contain; /* Ensure image fits nicely */
+    border-radius: 5px;
+}
+
+img {
+    width: fit-content;
+}
+
+.step h3 { 
+    font-size: 1rem; 
+    margin: 1rem 0;
+    color: var(--primary-color);
+    background-color: white;
+    border-radius: 24px;
+}
+
+.step p { 
+    color: var(--muted-color);
+}
+
+footer {
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+    font-size: 0.8em;
+    color: var(--muted-color);
+    border-top: 1px solid var(--muted-color);
+  }
+
+footer p { 
+    margin: 0; 
+    color: var(--muted-color);
+}
+
+/* Scrollbar styling */ 
+::-webkit-scrollbar { 
+    width: 10px; 
+}
+
+::-webkit-scrollbar-track { 
+    background: var(--background-color); 
+}
+
+::-webkit-scrollbar-thumb { 
+    background: var(--primary-color); 
+    border-radius: 5px; 
+}
+
+::-webkit-scrollbar-thumb:hover { 
+    background: var(--secondary-color); 
+}

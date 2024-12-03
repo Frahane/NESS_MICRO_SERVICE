@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NESS Crypto Trading Dashboard</title>
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- Include Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+    window.Telegram.WebApp.ready();
+    window.Telegram.WebApp.expand();
+</script>
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <marquee>Binance, Kucoin, OKX, Bybit... Trading Automation</marquee>
+            <h1>
+                Trading Automation  
+            </h1>
+            <p class="powered">Powered by:</p>
+            <div class="break"><img src="{{ url_for('static', filename='imgs/ness.png') }}" alt="Ness Logo" class="ness-logo"> PrivateNess Network</div>
+        </header>
+
+        <button id="back-button" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+
+        <div class="dashboard">
+            <!-- Market Overview Section -->
+            <div class="market-overview">
+                <h2>Market Overview</h2>
+                <table id="market-data">
+                    <thead>
+                        <tr>
+                            <th>Asset</th>
+                            <th>Price</th>
+                            <th>Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Market data will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Signal Alerts Section -->
+            <div class="signal-alerts">
+                <h2>Signal Alerts</h2>
+                <div id="alerts">
+                    <!-- Signal alerts will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <p class="subscription-p">
+            Click on the Asset to Subscribe (e.g., 'Doge').<br> 
+            A locked-in of 3000 NESS is required.<br> 
+            <strong>Enjoy a 30-day trial with no NESS locked-in!</strong>
+        </p>
+
+        <!-- Trading Bots Overview -->
+        <div class="dashboard">
+            <div class="bots-overview">
+                <h2 class="trading-bots-header">Spot Trading Bots</h2>
+                <table id="spot-bot-link">
+                    <thead>
+                        <tr>
+                            <th>Bots</th>
+                            <th>Price</th>
+                            <th>Exchange</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Spot trading bots will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="signal-alerts">
+                <h2 class="perpetual-bots-header">Perpetual Trading Bots</h2>
+                <table id="perpetual-bot-link">
+                    <thead>
+                        <tr>
+                            <th>Bots</th>
+                            <th>Price</th>
+                            <th>Exchange</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Perpetual trading bots will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <footer>
+            &copy; <span id="year"></span> Powered by PrivateNess Network
+        </footer>
+    </div>
+
+    <!-- Include the custom JS file -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <script>
+        // Set the current year in the footer
+        const currentYear = new Date().getFullYear();
+        document.getElementById('year').textContent = currentYear;
+    </script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Get Started Trading</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/get_started.css') }}">
+    <!-- Include Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+    window.Telegram.WebApp.ready();
+    window.Telegram.WebApp.expand();
+</script>
+
+<!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Get Started Trading</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('services') }}">Services</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li> 
+            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <div class="intro">
+            <h2>Welcome to Trading Automation</h2>
+            <p class="powered-by">Powered by PrivateNess Network.</P>
+            <p>Follow these steps to get started with professional-grade trading.</p>
+        </div>
+        <div class="steps">
+            <div class="step">
+                <img alt="A person analyzing stock charts on a computer screen" src="https://storage.googleapis.com/a1aa/image/fqUk4TBOViRNIKBghiW3CHWXyuZ03Oc2urJamdlLdhfP2yuTA.jpg"/> <br/>
+                <h3>Step 1: Learn the Basics</h3>
+                <p>Understand the fundamentals of trading, including market analysis and risk management.</p>
+            </div>
+            <div class="step">
+                <img alt="A person setting up a trading account on a laptop" src="https://storage.googleapis.com/a1aa/image/39HCKCCfggUnbK0PlQe59ga9FaFlJAIBxiM7Atje7cIWsldnA.jpg"/>
+                <h3>Step 2: Set Up Your Account</h3>
+                <p>Choose a reliable broker and set up your trading account to start trading.</p>
+            </div>
+            <div class="step">
+                <img alt="A person using a trading platform on a tablet" src="https://storage.googleapis.com/a1aa/image/Z9dbqjpTtp6gM9GGudR26YNqeflohldBhqVDASQnmtpM2yuTA.jpg"/>
+                <h3>Step 3: Choose a Trading Platform</h3>
+                <p>Select a trading platform that suits your needs and preferences.</p>
+            </div>
+            <div class="step">
+                <img alt="A person analyzing market trends on multiple screens" src="https://storage.googleapis.com/a1aa/image/5moT8qjAzr7XHZ3ecdN2lSeGxiJQHnyFMIEwydvrefRkYL7OB.jpg"/>
+                <h3>Step 4: Analyze the Market</h3>
+                <p>Use technical and fundamental analysis to make informed trading decisions.</p>
+            </div>
+            <div class="step">
+                <img alt="A person executing a trade on a smartphone" src="https://storage.googleapis.com/a1aa/image/l99elDZDgmUBVSI8DoIWBr9FJtfmS07rhDAvuG4SpfhdsldnA.jpg"/>
+                <h3>Step 5: Execute Trades</h3>
+                <p>Place your trades based on your analysis and trading strategy.</p>
+            </div>
+            <div class="step">
+                <img alt="A person reviewing their trading performance on a laptop" src="https://storage.googleapis.com/a1aa/image/N4wcIi96jHqdMt3xmuoKmAVHCEuEQw3EyDBXpJCOMduits7E.jpg"/>
+                <h3>Step 6: Review and Improve</h3>
+                <p>Regularly review your trading performance and make improvements to your strategy.</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        &copy; <span id="year"></span> Powered by PrivateNess Network
+    </footer>
+
+    <!-- Include the custom JS file -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    <script>
+        // Set the current year in the footer
+        const currentYear = new Date().getFullYear();
+        document.getElementById('year').textContent = currentYear;
+    </script>
+</body>
+</html>
