@@ -47,7 +47,7 @@ class TelegramBot:
     def set_menu_button(self):
         try:
             url = f'{self.base_url}/setChatMenuButton'
-            payload = {
+            payload = { 
                 'menu_button': {
                     'type': 'web_app',
                     'text': 'Trading',
