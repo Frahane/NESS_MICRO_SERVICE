@@ -1,5 +1,6 @@
 import sqlite3
 import logging
+from datetime import datetime
 
 # Enable logging for database operations
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
@@ -14,6 +15,53 @@ def get_db_connection():
     except sqlite3.Error as e:
         logger.error(f"Database connection error: {e}")
         return None
+    
+# Add user function
+def add_user(telegram_id, username):
+    conn = get_db_connection()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO users (telegram_id, username)
+                VALUES (?, ?)
+            ''', (telegram_id, username))
+            conn.commit()
+            logger.info(f"User  added: {username} with ID: {telegram_id}")
+        except sqlite3.Error as e:
+            logger.error(f"Error adding user: {e}")
+        finally:
+            conn.close()
+    else:
+        logger.error("Failed to add user. No connection established.")
+
+
+# Update NESS balance function
+def update_ness_balance(telegram_id, new_balance):
+    """
+    Update the NESS balance for a user in the database.
+
+    Args:
+        telegram_id (int): The Telegram ID of the user.
+        new_balance (float): The new NESS balance to set.
+    """
+    conn = get_db_connection()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('''
+                UPDATE users
+                SET ness_balance = ?
+                WHERE telegram_id = ?
+            ''', (new_balance, telegram_id))
+            conn.commit()
+            logger.info(f"Updated NESS balance for user ID: {telegram_id} to {new_balance}")
+        except sqlite3.Error as e:
+            logger.error(f"Error updating NESS balance: {e}")
+        finally:
+            conn.close()
+    else:
+        logger.error("Failed to update NESS balance. No connection established.")
 
 # Initialize the database (create tables if they don't exist)
 def initialize_db():
@@ -22,12 +70,13 @@ def initialize_db():
         try:
             cursor = conn.cursor()
             cursor.execute('''
-                CREATE TABLE IF NOT EXISTS users (
-                    telegram_id INTEGER PRIMARY KEY,
-                    username TEXT,
-                    ness_balance REAL DEFAULT 0,
-                    locked_ness REAL DEFAULT 0,
-                    coin_hour_balance REAL DEFAULT 0
+                CREATE TABLE IF NOT EXISTS bot_subscriptions (
+                    telegram_id INTEGER,
+                    bot_name TEXT,
+                    bot_username TEXT,
+                    payment_address TEXT,
+                    expires_at DATETIME,
+                    PRIMARY KEY (telegram_id, bot_name)
                 )
             ''')
             conn.commit()
@@ -39,91 +88,53 @@ def initialize_db():
     else:
         logger.error("Failed to initialize database. No connection established.")
 
-# Add or update user in the database
-def add_user(telegram_id, username):
+# Save bot subscription to the database
+def save_bot_subscription(subscription):
     conn = get_db_connection()
     if conn:
         try:
             cursor = conn.cursor()
             cursor.execute('''
-                INSERT OR REPLACE INTO users (telegram_id, username)
-                VALUES (?, ?)
-            ''', (telegram_id, username))
+                INSERT OR REPLACE INTO bot_subscriptions (telegram_id, bot_name, bot_username, payment_address, expires_at)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (subscription['telegram_id'], subscription['bot_name'], subscription['bot_username'], subscription['payment_address'], subscription['expires_at']))
             conn.commit()
-            logger.info(f"User {username} (ID: {telegram_id}) added or updated.")
+            logger.info(f"Saved subscription for user ID: {subscription['telegram_id']} to bot: {subscription['bot_name']}.")
         except sqlite3.Error as e:
-            logger.error(f"Error adding/updating user: {e}")
+            logger.error(f"Error saving subscription: {e}")
         finally:
             conn.close()
 
-# Update NESS balance for a user
-def update_ness_balance(telegram_id, amount):
+# Get user bot subscription
+def get_user_bot_subscription(telegram_id, bot_name):
     conn = get_db_connection()
     if conn:
         try:
             cursor = conn.cursor()
             cursor.execute('''
-                UPDATE users
-                SET ness_balance = ness_balance + ?
-                WHERE telegram_id = ?
-            ''', (amount, telegram_id))
-            conn.commit()
-            logger.info(f"Updated NESS balance for user ID: {telegram_id}. Amount: {amount}.")
+                SELECT * FROM bot_subscriptions
+                WHERE telegram_id = ? AND bot_name = ?
+            ''', (telegram_id, bot_name))
+            return cursor.fetchone()
         except sqlite3.Error as e:
-            logger.error(f"Error updating NESS balance: {e}")
+            logger.error(f"Error retrieving subscription: {e}")
+            return None
         finally:
             conn.close()
 
-# Lock a certain amount of NESS for a user
-def lock_ness(telegram_id, amount):
+# Remove bot subscription
+def remove_bot_subscription(telegram_id, bot_name):
     conn = get_db_connection()
     if conn:
         try:
             cursor = conn.cursor()
             cursor.execute('''
-                UPDATE users
-                SET locked_ness = locked_ness + ?
-                WHERE telegram_id = ?
-            ''', (amount, telegram_id))
+                DELETE FROM bot_subscriptions
+                WHERE telegram_id = ? AND bot_name = ?
+            ''', (telegram_id, bot_name))
             conn.commit()
-            logger.info(f"Locked {amount} NESS for user ID: {telegram_id}.")
+            logger.info(f"Removed subscription for user ID: {telegram_id} from bot: {bot_name}.")
         except sqlite3.Error as e:
-            logger.error(f"Error locking NESS: {e}")
-        finally:
-            conn.close()
-
-# Unlock a certain amount of NESS for a user
-def unlock_ness(telegram_id, amount):
-    conn = get_db_connection()
-    if conn:
-        try:
-            cursor = conn.cursor()
-            cursor.execute('''
-                UPDATE users
-                SET locked_ness = locked_ness - ?
-                WHERE telegram_id = ?
-            ''', (amount, telegram_id))
-            conn.commit()
-            logger.info(f"Unlocked {amount} NESS for user ID: {telegram_id}.")
-        except sqlite3.Error as e:
-            logger.error(f"Error unlocking NESS: {e}")
-        finally:
-            conn.close()
-
-# Update the Coin Hour balance for a user
-def update_coin_hour_balance(telegram_id, amount):
-    conn = get_db_connection()
-    if conn:
-        try:
-            cursor = conn.cursor()
-            cursor.execute('''
-                UPDATE users
-                SET coin_hour_balance = coin_hour_balance + ?
-                WHERE telegram_id = ?
-            ''', (amount, telegram_id))
-            conn.commit()
-            logger.info(f"Updated Coin Hour balance for user ID: {telegram_id}. Amount: {amount}.")
-        except sqlite3.Error as e:
-            logger.error(f"Error updating Coin Hour balance: {e}")
+            logger.error(f"Error removing subscription: {e}")
         finally:
             conn.close()

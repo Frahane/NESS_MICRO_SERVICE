@@ -2,16 +2,24 @@ from flask import Flask, render_template, request, jsonify
 from utils.config import Config
 from utils.db_utils import add_user, update_ness_balance, initialize_db
 from utils.telegram_utils import TelegramBot
+from utils.payment_utils import BotAccessManager
 import threading
 import time
 import logging
 
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# Setup logging as early as possible
+Config.setup_logging()
+
+# Create logger for the application
 logger = logging.getLogger(__name__)
 
+def create_app():
+    app = Flask(__name__, static_folder=Config.STATIC_FOLDER, template_folder=Config.TEMPLATE_FOLDER)
+    logger.info("Initializing PrivateNess Network Application")
+    return app
+
 # Flask app initialization
-app = Flask(__name__, static_folder=Config.STATIC_FOLDER, template_folder=Config.TEMPLATE_FOLDER)
+app = create_app()
 bot = TelegramBot()
 
 # Set up the menu button immediately after bot initialization
@@ -84,6 +92,64 @@ def setup():
         bot.set_menu_button()
     except Exception as e:
         logger.error(f"Failed to set up menu button in setup: {e}")
+
+bot_access_manager = BotAccessManager()
+
+'''@app.route('/check_bot_access', methods=['POST'])
+def check_bot_access():
+    data = request.json
+    telegram_id = data.get('telegram_id')
+    bot_name = data.get('bot_name')
+
+    # Check ongoing bot access
+    access_result = bot_access_manager.check_ongoing_bot_access(
+        telegram_id, 
+        bot_name
+    )
+    
+    logger.info(f"Access check result for {telegram_id} on {bot_name}: {access_result}")
+    return jsonify(access_result)'''
+
+@app.route('/telegram/check_bot_access', methods=['POST'])  # Telegram route
+def check_bot_access():
+    data = request.json
+    telegram_id = data.get('telegram_id')
+    bot_name = data.get('bot_name')
+
+    # Check ongoing bot access
+    access_result = bot_access_manager.check_ongoing_bot_access(telegram_id, bot_name)
+    
+    logger.info(f"Access check result for {telegram_id} on {bot_name}: {access_result}")
+    return jsonify(access_result)
+
+
+'''@app.route('/verify_bot_payment', methods=['POST'])
+def verify_bot_payment():
+    data = request.json
+    telegram_id = data.get('telegram_id')
+    bot_name = data.get('bot_name')
+    tx_hash = data.get('tx_hash')
+
+    # Verify bot access with transaction
+    verification_result = bot_access_manager.verify_bot_access(
+        telegram_id, 
+        bot_name, 
+        tx_hash
+    )
+    
+    return jsonify(verification_result)'''
+
+@app.route('/telegram/verify_bot_payment', methods=['POST'])  # Telegram route
+def verify_bot_payment():
+    data = request.json
+    telegram_id = data.get('telegram_id')
+    bot_name = data.get('bot_name')
+    tx_hash = data.get('tx_hash')
+
+    # Verify bot access with transaction
+    verification_result = bot_access_manager.verify_bot_access(telegram_id, bot_name, tx_hash)
+    
+    return jsonify(verification_result)
 
 @app.route('/')
 def home():
@@ -167,10 +233,13 @@ def health_check():
 
 if __name__ == '__main__':
     try:
-        # Run setup before starting the app
-        setup()
-        # Try setting menu button one more time before running the app
-        bot.set_menu_button()
-        app.run(debug=False, host='0.0.0.0', port=5000)
+        logger.info("Starting application on http://127.0.0.1:5000")
+        initialize_db()  # Ensure the database is initialized
+        app.run(
+            host='0.0.0.0',  # Listen on all available interfaces
+            port=5000,
+            debug=False  # Ensure this is False in production
+        )
     except Exception as e:
-        logger.critical(f"Failed to start application: {e}")
+        logger.critical(f"Failed to start application: {e}", exc_info=True)
+        logger.info(f"Checking bot access for user ID: {telegram_id}, bot name: {bot_name}")

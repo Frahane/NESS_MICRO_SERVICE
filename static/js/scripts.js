@@ -20,7 +20,6 @@
             SIGNAL_ALERTS: 'https://api.cryptosignals.com/v1/signals'
         },
         BOT_USERNAMES: {
-            // Bot username mappings
             'Doge_Spot_Binance': 'Stoneyard_Doge_Bot',
             'Doge_Spot_Kucoin': 'Stoneyard_Doge_Bot',
             'Doge_Spot_Okx': 'Stoneyard_Doge_Bot',
@@ -74,6 +73,7 @@
         }
     };
 
+    
     // Logging Utility
     const Logger = {
         error: function(context, error) {
@@ -84,10 +84,8 @@
         }
     };
 
-
     // Bot Configurations
     const botConfigurations = {
-        // Bot configurations
         'Doge_Spot_Binance': {
             name: 'Doge Spot Bot (Binance)',
             requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
@@ -647,16 +645,34 @@
         }
     }
 
-    
-    // Populate bot tables
-    populateBotTable(spotBots, 'spot-bot-link');
-    populateBotTable(perpetualBots, 'perpetual-bot-link');
+    // Bot Table Population
+    function populateBotTable(bots, tableId) {
+        const tbody = $(`#${tableId} tbody`);
+        tbody.empty();
+        
+        bots.forEach(bot => {
+            const row = $(`
+                <tr>
+                    <td>
+                        <a href="#" 
+                           class="bot-link" 
+                           data-bot-name="${bot.botKey}">
+                            ${bot.name}
+                        </a>
+                    </td>
+                    <td>${bot.price}</td>
+                    <td>${bot.exchange}</td>
+                </tr>
+            `);
+            tbody.append(row);
+        });
+    }
 
-    // Check Bot Access Function
+    // Bot Access Verification
     function checkBotAccess(botName) {
         return new Promise((resolve, reject) => {
             $.ajax({
-                url: '/telegram/check_bot_access',
+                url: '/check_bot_access',
                 method: 'POST',
                 data: JSON.stringify({
                     bot_name: botName,
@@ -669,66 +685,41 @@
         });
     }
 
-
-    // Show Payment Modal Function
-   // Show Payment Modal Function
-   function showPaymentModal(botName) {
-    // Create the modal HTML
-    const modalHtml = `
-        <div class="payment-modal" style="background-color: white; border-radius: 10px; padding: 20px; width: 300px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;">
-            <h3 style="margin: 0; font-size: 1.5em;">Access ${botName}</h3>
-            <div class="payment-details" style="margin-top: 10px;">
-                <p>Bot Access Requirements:</p>
-                <ul style="list-style-type: none; padding: 0;">
-                    <li>Send <strong>${CONFIG.PAYMENT.REQUIRED_NCH} NCH</strong> to:</li>
-                    <code id="paymentAddress" style="display: block; background-color: #f9f9f9; padding: 5px; border-radius: 5px;">${CONFIG.PAYMENT.ADDRESS}</code>
-                    <button id="copyAddressBtn" style="margin-top: 5px; padding: 5px; background-color: #1e90ff; color: white; border: none; border-radius: 5px; cursor: pointer;">Copy Address</button>
-                    <li>Minimum NESS Balance: <strong>${CONFIG.PAYMENT.MINIMUM_NESS}</strong></li>
-                </ul>
-                <input type="text" id="txHash" placeholder="Transaction Hash" style="width: 100%; padding: 10px; margin-top: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                <button id="verifyPaymentBtn" data-bot-name="${botName}" style="margin-top: 10px; padding: 10px; background-color: #1e90ff; color: white; border: none; border-radius: 5px; cursor: pointer; width: 100%;">Verify Payment</button>
+    // Payment Modal Generation
+    function showPaymentModal(botName) {
+        const botConfig = botConfigurations[botName];
+        
+        const modalHtml = `
+            <div class="payment-modal">
+                <h3>Access ${botConfig.name}</h3>
+                <div class="payment-details">
+                    <p>Bot Access Requirements:</p>
+                    <ul>
+                        <li>Send ${botConfig.requiredNCH} NCH to:</li>
+                        <code>${botConfig.paymentAddress}</code>
+                        <li>Minimum NESS Balance: ${botConfig.minimumNESS}</li>
+                    </ul>
+                    <input type="text" id="txHash" placeholder="Transaction Hash">
+                    <button id="verifyPaymentBtn" data-bot-name="${botName}">
+                        Verify Payment
+                    </button>
+                </div>
             </div>
-            <button id="closeModalBtn" style="margin-top: 10px; padding: 5px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
-        </div>
-    `;
+        `;
 
-    // Append modal to body
-    $('body').append(modalHtml);
-
-    // Copy Address Functionality
-    $('#copyAddressBtn').on('click', function() {
-        const address = $('#paymentAddress').text();
-        navigator.clipboard.writeText(address).then(() => {
-            alert('Payment address copied to clipboard!');
-        }).catch(err => {
-            Logger.error('Copy Address', err);
+        window.Telegram.WebApp.showAlert(modalHtml, () => {
+            $('#verifyPaymentBtn').on('click', function() {
+                const botName = $(this).data('bot-name');
+                const txHash = $('#txHash').val();
+                verifyPayment(botName, txHash);
+            });
         });
-    });
+    }
 
-    // Close Modal Functionality
-    $('#closeModalBtn').on('click', function() {
-        $('.payment-modal').remove(); // Remove the modal from the DOM
-    });
-
-    // Verify Payment Functionality
-    $('#verifyPaymentBtn').on('click', function() {
-        const botName = $(this).data('bot-name');
-        const txHash = $('#txHash').val();
-        verifyPayment(botName, txHash);
-    });
-}
-
-   /* function showPaymentModal(botName) {
-        // Simplified alert for debugging
-        alert(`Access denied for ${botName}. Please send ${CONFIG.PAYMENT.REQUIRED_NCH} NCH to ${CONFIG.PAYMENT.ADDRESS} to subscribe.`);
-        
-        
-    }*/
-
-    // Verify Payment Function
+    // Payment Verification
     function verifyPayment(botName, txHash) {
         $.ajax({
-            url: '/telegram/verify_bot_payment',
+            url: '/verify_bot_payment',
             method: 'POST',
             data: JSON.stringify({
                 bot_name: botName,
@@ -738,11 +729,14 @@
             contentType: 'application/json',
             success: function(response) {
                 if (response.success) {
-                    window.Telegram.WebApp.showAlert(`Access Granted: ${botName}!`, () => {
-                        openBotInterface(botName);
-                    });
+                    window.Telegram.WebApp.showAlert(
+                        `Access Granted: ${botName}!`, 
+                        () => openBotInterface(botName)
+                    );
                 } else {
-                    window.Telegram.WebApp.showAlert(`Payment Verification Failed: ${response.message}`);
+                    window.Telegram.WebApp.showAlert(
+                        `Payment Verification Failed: ${response.message}`
+                    );
                 }
             },
             error: function(err) {
@@ -752,10 +746,10 @@
         });
     }
 
-    // Open Bot Interface Function
+    // Open Bot Interface
     function openBotInterface(botName) {
         const botUsername = CONFIG.BOT_USERNAMES[botName] || 'PrivateNess_Bot';
-        window.location.href = `https://t.me/${botUsername}`;
+        window.location.href = `https://t.me/${ botUsername}`;
     }
 
     // Fetch Market Data
@@ -805,49 +799,31 @@
         });
     }
 
-    // Fetch data on page load
-    fetchMarketData();
-    fetchSignalAlerts();
-
-    // Populate Bot Table Function
-    function populateBotTable(bots, tableId) {
-        const tbody = $(`#${tableId} tbody`);
-        tbody.empty();
-        
-        bots.forEach(bot => {
-            const row = $(`
-                <tr>
-                    <td>
-                        <a href="#" 
-                           class="bot-link" 
-                           data-bot-name="${bot.botKey}">
-                            ${bot.name}
-                        </a>
-                    </td>
-                    <td>${bot.price}</td>
-                    <td>${bot.exchange}</td>
-                </tr>
-            `);
-            tbody.append(row);
-        });
-    }
-
     // Document Ready Function
     $(document).ready(function() {
+        const webapp = initTelegramWebApp();
+        if (!webapp) return;
+
+        // Populate bot tables
+        populateBotTable(spotBots, 'spot-bot-link');
+        populateBotTable(perpetualBots, 'perpetual-bot-link');
+
+        // Fetch data on page load
+        fetchMarketData();
+        fetchSignalAlerts();
+
         // Attach click handlers to bot links
         $('.bot-link').on('click', function(e) {
-            e.preventDefault(); // Prevent default link behavior
-            const botName = $(this).data('bot-name'); // Get the bot name from data attribute
+            e.preventDefault();
+            const botName = $(this).data('bot-name');
 
             // Check access before allowing interaction
             checkBotAccess(botName)
                 .then(accessResponse => {
-                    console.log('Access Response:', accessResponse); // Debugging log
                     if (accessResponse.access) {
-                        openBotInterface(botName); // If access is granted, open the bot interface
+                        openBotInterface(botName);
                     } else {
-                        console.log('No active subscription, showing payment modal.'); // Debugging log
-                        showPaymentModal(botName); // Show payment modal if access is denied
+                        showPaymentModal(botName);
                     }
                 })
                 .catch(err => {
