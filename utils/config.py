@@ -13,28 +13,31 @@ class Config:
     # Telegram Bot Configuration
     BOT_TOKEN = os.getenv('BOT_TOKEN')
     CHAT_ID = os.getenv('CHAT_ID')
-    DB_PATH = 'users.db'
+    DB_PATH = os.getenv('DB_PATH', 'users.db')
     STATIC_FOLDER = 'static'
     TEMPLATE_FOLDER = 'templates'
     WEBAPP_URL = os.getenv('WEBAPP_URL')
-    
-    
-
-    # Database Configuration
-    DB_PATH = os.getenv('DB_PATH')
-    
-    # Folder Configurations
-    STATIC_FOLDER = 'static'
-    TEMPLATE_FOLDER = 'templates'
 
     # Blockchain Configuration
-    PAYMENT_ADDRESS = "2kGY2fECeGbaQWnq2QvZ9L7ng7QkerUraMn"
-    RPC_URL = os.getenv('RPC_URL')
+    PAYMENT_ADDRESS_DOGE_SPOT_BINANCE = os.getenv('PAYMENT_ADDRESS_DOGE_SPOT_BINANCE')
+    PAYMENT_ADDRESS_DOGE_SPOT_KUCOIN = os.getenv('PAYMENT_ADDRESS_DOGE_SPOT_KUCOIN')
+    PAYMENT_ADDRESS_DOGE_SPOT_OKX = os.getenv('PAYMENT_ADDRESS_DOGE_SPOT_OKX')
+    PAYMENT_ADDRESS_XRP_SPOT_BINANCE = os.getenv('PAYMENT_ADDRESS_XRP_SPOT_BINANCE')
+    PAYMENT_ADDRESS_DOGE_PERPETUAL_BINANCE = os.getenv('PAYMENT_ADDRESS_DOGE_PERPETUAL_BINANCE')
+    PAYMENT_ADDRESS_DOGE_PERPETUAL_KUCOIN = os.getenv('PAYMENT_ADDRESS_DOGE_PERPETUAL_KUCOIN')
+    PAYMENT_ADDRESS_DOGE_PERPETUAL_OKX = os.getenv('PAYMENT_ADDRESS_DOGE_PERPETUAL_OKX')
+    PAYMENT_ADDRESS_XRP_PERPETUAL_BINANCE = os.getenv('PAYMENT_ADDRESS_XRP_PERPETUAL_BINANCE')
+    # URLs Configuration
+    RPC_URL = os.getenv("RPC_URL", "http://127.0.0.1:6660")
+    EXPLORER_URL = os.getenv("EXPLORER_URL", "https://ness-explorer.magnetosphere.net")
+    # Degging
+    print(f"[DEBUG] Loaded EXPLORER_URL: {EXPLORER_URL}")
 
     # Payment and Subscription Configuration
     SUBSCRIPTION_DURATION_DAYS = 30
-    REQUIRED_NCH = 3000
-    MINIMUM_NESS = 4000
+    REQUIRED_NCH = int(os.getenv('REQUIRED_NCH', 300000))
+    MINIMUM_NESS = int(os.getenv('MINIMUM_NESS', 4000))
+
 
     # Comprehensive Bot Payment Configurations
     BOT_PAYMENT_CONFIGS: Dict[str, Dict[str, Any]] = {
@@ -42,7 +45,7 @@ class Config:
         'Doge_Spot_Binance': {
             'required_nch': REQUIRED_NCH,
             'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
+            'payment_address': PAYMENT_ADDRESS_DOGE_SPOT_BINANCE,
             'bot_username': 'Stoneyard_Doge_Bot',
             'exchange': 'Binance',
             'trading_type': 'Spot'
@@ -50,7 +53,7 @@ class Config:
         'Doge_Spot_Kucoin': {
             'required_nch': REQUIRED_NCH,
             'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
+            'payment_address': PAYMENT_ADDRESS_DOGE_SPOT_KUCOIN,
             'bot_username': 'Stoneyard_Doge_Bot',
             'exchange': 'Kucoin',
             'trading_type': 'Spot'
@@ -58,7 +61,7 @@ class Config:
         'Doge_Spot_OKX': {
             'required_nch': REQUIRED_NCH,
             'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
+            'payment_address': PAYMENT_ADDRESS_DOGE_SPOT_OKX,
             'bot_username': 'Stoneyard_Doge_Bot',
             'exchange': 'OKX',
             'trading_type': 'Spot'
@@ -67,133 +70,18 @@ class Config:
         'XRP_Spot_Binance': {
             'required_nch': REQUIRED_NCH,
             'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
+            'payment_address': PAYMENT_ADDRESS_XRP_SPOT_BINANCE,
             'bot_username': 'Stoneyard_XRP_Bot',
             'exchange': 'Binance',
             'trading_type': 'Spot'
         },
-        'XRP_Spot_Kucoin': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_XRP_Bot',
-            'exchange': 'Kucoin',
-            'trading_type': 'Spot'
-        },
-        'XRP_Spot_OKX': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_XRP_Bot',
-            'exchange': 'OKX',
-            'trading_type': 'Spot'
-        },
-
-        'ETH_Spot_Binance': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_ETH_Bot',
-            'exchange': 'Binance',
-            'trading_type': 'Spot'
-        },
-        'ETH_Spot_Kucoin': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_ETH_Bot',
-            'exchange': 'Kucoin',
-            'trading_type': 'Spot'
-        },
-        'ETH_Spot_OKX': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_ETH_Bot',
-            'exchange': 'OKX',
-            'trading_type': 'Spot'
-        },
-
-        'BTC_Spot_Binance': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_BTC_Bot',
-            'exchange': 'Binance',
-            'trading_type': 'Spot'
-        },
-        'BTC_Spot_Kucoin': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_BTC_Bot',
-            'exchange': 'Kucoin',
-            'trading_type': 'Spot'
-        },
-        'BTC_Spot_OKX': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_BTC_Bot',
-            'exchange': 'OKX',
-            'trading_type': 'Spot'
-        },
-
-        'SOL_Spot_Binance': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_SOL_Bot',
-            'exchange': 'Binance',
-            'trading_type': 'Spot'
-        },
-        'SOL_Spot_Kucoin': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_SOL_Bot',
-            'exchange': 'Kucoin',
-            'trading_type': 'Spot'
-        },
-        'SOL_Spot_OKX': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_SOL_Bot',
-            'exchange': 'OKX',
-            'trading_type': 'Spot'
-        },
-
-        'AVAX_Spot_Binance': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_AVAX_Bot',
-            'exchange': 'Binance',
-            'trading_type': 'Spot'
-        },
-        'AVAX_Spot_Kucoin': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_AVAX_Bot',
-            'exchange': 'Kucoin',
-            'trading_type': 'Spot'
-        },
-        'AVAX_Spot_OKX': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_AVAX_Bot',
-            'exchange': 'OKX',
-            'trading_type': 'Spot'
-        },
+        
         
         # Perpetual Trading Bots
         'Doge_Perpetual_Binance': {
             'required_nch': REQUIRED_NCH,
             'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
+            'payment_address': PAYMENT_ADDRESS_DOGE_PERPETUAL_BINANCE,
             'bot_username': 'Stoneyard_Perpetual_Doge_Bot',
             'exchange': 'Binance',
             'trading_type': 'Perpetual'
@@ -201,7 +89,7 @@ class Config:
         'Doge_Perpetual_Kucoin': {
             'required_nch': REQUIRED_NCH,
             'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
+            'payment_address': PAYMENT_ADDRESS_DOGE_PERPETUAL_KUCOIN,
             'bot_username': 'Stoneyard_Perpetual_Doge_Bot',
             'exchange': 'Kucoin',
             'trading_type': 'Perpetual'
@@ -209,7 +97,7 @@ class Config:
         'Doge_Perpetual_OKX': {
             'required_nch': REQUIRED_NCH,
             'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
+            'payment_address': PAYMENT_ADDRESS_DOGE_PERPETUAL_OKX,
             'bot_username': 'Stoneyard_Perpetual_Doge_Bot',
             'exchange': 'OKX',
             'trading_type': 'Perpetual'
@@ -218,125 +106,9 @@ class Config:
         'XRP_Perpetual_Binance': {
             'required_nch': REQUIRED_NCH,
             'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
+            'payment_address': PAYMENT_ADDRESS_XRP_PERPETUAL_BINANCE,
             'bot_username': 'Stoneyard_Perpetual_XRP_Bot',
             'exchange': 'Binance',
-            'trading_type': 'Perpetual'
-        },
-        'XRP_Perpetual_Kucoin': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_Perpetual_XRP_Bot',
-            'exchange': 'Kucoin',
-            'trading_type': 'Perpetual'
-        },
-        'XRP_Perpetual_OKX': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_Perpetual_XRP_Bot',
-            'exchange': 'OKX',
-            'trading_type': 'Perpetual'
-        },
-
-        'ETH_Perpetual_Binance': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_Perpetual_ETH_Bot',
-            'exchange': 'Binance',
-            'trading_type': 'Perpetual'
-        },
-        'ETH_Perpetual_Kucoin': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_Perpetual_ETH_Bot',
-            'exchange': 'Kucoin',
-            'trading_type': 'Perpetual'
-        },
-        'ETH_Perpetual_OKX': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_Perpetual_ETH_Bot',
-            'exchange': 'OKX',
-            'trading_type': 'Perpetual'
-        },
-
-        'BTC_Perpetual_Binance': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_Perpetual_BTC_Bot',
-            'exchange': 'Binance',
-            'trading_type': 'Perpetual'
-        },
-        'BTC_Perpetual_Kucoin': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_Perpetual_BTC_Bot',
-            'exchange': 'Kucoin',
-            'trading_type': 'Perpetual'
-        },
-        'BTC_Perpetual_OKX': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_Perpetual_BTC_Bot',
-            'exchange': 'OKX',
-            'trading_type': 'Perpetual'
-        },
-
-        'SOL_Perpetual_Binance': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_Perpetual_SOL_Bot',
-            'exchange': 'Binance',
-            'trading_type': 'Perpetual'
-        },
-        'SOL_Perpetual_Kucoin': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_Perpetual_SOL_Bot',
-            'exchange': 'Kucoin',
-            'trading_type': 'Perpetual'
-        },
-        'SOL_Perpetual_OKX': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_Perpetual_SOL_Bot',
-            'exchange': 'OKX',
-            'trading_type': 'Perpetual'
-        },
-
-        'AVAX_Perpetual_Binance': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_Perpetual_AVAX_Bot',
-            'exchange': 'Binance',
-            'trading_type': 'Perpetual'
-        },
-        'AVAX_Perpetual_Kucoin': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_Perpetual_AVAX_Bot',
-            'exchange': 'Kucoin',
-            'trading_type': 'Perpetual'
-        },
-        'AVAX_Perpetual_OKX': {
-            'required_nch': REQUIRED_NCH,
-            'minimum_ness': MINIMUM_NESS,
-            'payment_address': PAYMENT_ADDRESS,
-            'bot_username': 'Stoneyard_Perpetual_AVAX_Bot',
-            'exchange': 'OKX',
             'trading_type': 'Perpetual'
         },
         
@@ -353,27 +125,32 @@ class Config:
             },
         },
         'handlers': {
-            'default': {
+            'console': {
                 'level': 'INFO',
-                'formatter': 'standard',
                 'class': 'logging.StreamHandler',
+                'formatter': 'standard'
             },
-            'file_handler': {
+            'file': {
                 'level': 'ERROR',
-                'formatter': 'standard',
                 'class': 'logging.FileHandler',
-                'filename': 'error.log',
-                'mode': 'a',
-            },
+                'filename': 'app.log',
+                'formatter': 'standard',
+                'mode': 'a'
+            }
         },
         'loggers': {
-            '': {  # root logger
-                'handlers': ['default', 'file_handler'],
+            '': {  # Root logger
+                'handlers': ['console', 'file'],
                 'level': 'INFO',
                 'propagate': True
             },
+            'blockchain_utils': {
+                'level': 'DEBUG',
+                'propagate': True
+            }
         }
     }
+
 
     # API Endpoints
     API_ENDPOINTS = {
@@ -448,15 +225,11 @@ class Config:
 
     @classmethod
     def setup_logging(cls):
-        """
-        Configure logging based on the defined configuration
-        """
         import logging.config
         logging.config.dictConfig(cls.LOGGING_CONFIG)
-        
-        # Log RPC URL for debugging
         logger = logging.getLogger(__name__)
         logger.info(f"RPC URL configured: {cls.RPC_URL}")
+
     def __repr__(self):
         return f"<PrivateNess Network Configuration>"
     

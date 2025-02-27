@@ -1,123 +1,170 @@
 import os
-from dotenv import load_dotenv
-import requests
 import logging
+import requests
+from dotenv import load_dotenv
 from typing import Dict, Any
-from datetime import datetime, timedelta
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 from utils.config import Config
-# Load environment variables from .env file
+
+# Load environment variables
 load_dotenv()
 
 class PrivatenessBlockchainClient:
     def __init__(self, rpc_url: str = None):
-        # Create a logger for this class
         self.logger = logging.getLogger(__name__)
-        # Set the RPC URL, defaulting to a local address if not provided
-        self.rpc_url = rpc_url or os.getenv('RPC_URL', 'http://127.0.0.1:6660')  # Default RPC URL with /wallets
+        self.rpc_url = rpc_url or Config.RPC_URL
+        self.explorer_url = Config.EXPLORER_URL
 
-        # Log RPC URL for debugging
-        self.logger.info(f"Initializing BlockchainClient with RPC URL: {self.rpc_url}")
+        # ✅ Keep Headless Mode and SSL Fixes
+        chrome_options = Options()
+        #chrome_options.add_argument("--headless")  # ✅ Keep running in headless mode
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
 
-    def make_rpc_request(self, method: str, params: list) -> Dict[str, Any]:
+        # ✅ Fix SSL Errors
+        chrome_options.add_argument("--ignore-certificate-errors")
+        chrome_options.add_argument("--allow-running-insecure-content")
+        chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+
+        # Set up Chrome WebDriver
+        self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+
+        self.logger.info(f"[CONFIG] RPC_URL: {self.rpc_url}")
+        self.logger.info(f"[CONFIG] EXPLORER_URL: {self.explorer_url}")
+
+    def validate_transaction(self, tx_hash: str, bot_name: str) -> Dict[str, Any]:
         """
-        Make an RPC request to the blockchain node.
-
-        Args:
-            method (str): The RPC method to call.
-            params (list): The parameters for the RPC method.
-
-        Returns:
-            dict: The response from the RPC call.
+        Validate a transaction using Selenium first, then fall back to RPC if needed.
         """
-        headers = {"Content-Type": "application/json"}
-        data = {"jsonrpc": "2.0", "method": method, "params": params, "id": 1}
+        bot_config = Config.get_bot_config(bot_name)  # ✅ Get bot-specific payment address
+        if not bot_config:
+            return {"valid": False, "error": "Invalid bot name"}
+
+        required_nch = bot_config["required_nch"]
+        payment_address = bot_config["payment_address"]  # ✅ Ensure we check against the correct bot's address
+
+        self.logger.info(f"[VALIDATION] Checking TX: {tx_hash} via Selenium first")
+
+        # Run Selenium FIRST
+        result = self.scrape_transaction_details(tx_hash, required_nch, payment_address)
+
+        if result.get("valid"):
+            self.logger.info(f"[VALIDATION SUCCESS] TX: {tx_hash} verified via Selenium")
+            return result
+
+        # If Selenium fails, switch to RPC
+        self.logger.warning(f"[VALIDATION] Selenium failed for TX: {tx_hash}. Switching to RPC fallback.")
+        result = self.make_rpc_request("validate_transaction", [tx_hash, required_nch])
+
+        if result and "result" in result:
+            self.logger.info(f"[VALIDATION SUCCESS] TX: {tx_hash} verified via RPC")
+            return result
+
+        # If both fail, return error
+        self.logger.error(f"[VALIDATION FAILED] TX: {tx_hash} could not be verified via Selenium or RPC.")
+        return {"valid": False, "error": "Transaction verification failed"}
+
+    def scrape_transaction_details(self, tx_hash: str, required_nch: int, payment_address: str) -> Dict[str, Any]:
+        """
+        Uses Selenium to scrape transaction details dynamically.
+        Extracts sender, receiver, and NCH sent.
+        """
+        url = f"{self.explorer_url}/app/transaction/{tx_hash}"
+
+        self.logger.info(f"[SCRAPING] Extracting TX: {tx_hash} from {url}")
 
         try:
-            response = requests.post(self.rpc_url, headers=headers, json=data)
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            self.logger.error(f"RPC request failed: {e}")
-            return None
+            self.driver.get(url)
+            wait = WebDriverWait(self.driver, 30)
+
+            # ✅ Wait for transaction status
+            status_element = wait.until(
+                EC.visibility_of_element_located((By.XPATH, "/html/body/app-root/div/div/app-transaction-detail/div/div/div[1]/div"))
+            )
+            status = status_element.text.strip()
+
+            # ✅ Extract Sender Address
+            sender_element = wait.until(
+                EC.visibility_of_element_located((By.XPATH, "/html/body/app-root/div/div/app-transaction-detail/app-transaction-info/div/div[3]/div[1]/div[1]/div[2]/a"))
+            )
+            sender_address = sender_element.text.strip()
+
+            # ✅ Extract Receiver Address
+            receiver_element = wait.until(
+                EC.visibility_of_element_located((By.XPATH, "/html/body/app-root/div/div/app-transaction-detail/app-transaction-info/div/div[3]/div[1]/div[2]/div[2]/a"))
+            )
+            receiver = receiver_element.text.strip()
+
+            # ✅ Extract NCH Sent (Hours)
+            nch_element = wait.until(
+                EC.visibility_of_element_located((By.XPATH, "/html/body/app-root/div/div/app-transaction-detail/app-transaction-info/div/div[3]/div[1]/div[2]/div[2]/div[2]/div[2]"))
+            )
+            nch_sent = int(nch_element.text.replace(",", "").strip())  # Convert to integer after removing commas
+
+            self.logger.info(f"[SCRAPING SUCCESS] TX: {tx_hash} | Status: {status} | NCH Sent: {nch_sent} | Sender: {sender_address} | Receiver: {receiver}")
+
+            # ✅ Validate only NCH (Hours) and ensure it was sent to the correct bot's address
+            if status == "Confirmed" and nch_sent >= required_nch and receiver == payment_address:
+                return {
+                    "valid": True,
+                    "from_address": sender_address,  # Pass sender address for balance check
+                    "nch_amount": nch_sent
+                }
+
+            return {"valid": False, "error": "Transaction does not meet required NCH conditions"}
+
         except Exception as e:
-            self.logger.error(f"Unexpected error: {e}")
-            return None
+            self.logger.error(f"[SCRAPING FAILED] TX: {tx_hash} | Error: {e}")
+            return {"valid": False, "error": "Explorer unreachable. Please try again later."}
 
-    def validate_transaction(self, tx_hash: str, required_amount: float) -> Dict[str, Any]:
+    def scrape_wallet_balance(self, address: str, minimum_ness: float) -> bool:
         """
-        Validate a transaction using the RPC interface.
-
-        Args:
-            tx_hash (str): The transaction hash to validate.
-            required_amount (float): The required amount for the transaction.
-
-        Returns:
-            dict: A dictionary indicating whether the transaction is valid and any error messages.
+        Uses Selenium to scrape the sender's wallet balance dynamically.
+        Ensures the sender's NESS holdings are >= minimum_ness.
         """
+        url = f"{self.explorer_url}/app/address/{address}/1"
+
+        self.logger.info(f"[SCRAPING BALANCE] Checking balance for: {address}")
+
         try:
-            # Construct the RPC request payload
-            payload = {
-                "jsonrpc": "2.0",
-                "method": "validate_transaction",  # Ensure this is the correct method name
-                "params": {
-                    "tx_hash": tx_hash,
-                    "required_amount": required_amount,
-                    "payment_address": "2kGY2fECeGbaQWnq2QvZ9L7ng7QkerUraMn"  # Example payment address
-                },
-                "id": 1
-            }
+            self.driver.get(url)
+            wait = WebDriverWait(self.driver, 10)
 
-            # Send the RPC request
-            response = requests.post(f'{self.rpc_url}/validate_transaction', json=payload)  # Ensure the correct endpoint
-            response.raise_for_status()  # Raise an error for bad responses
+            # ✅ Extract the balance value
+            balance_element = wait.until(
+                EC.visibility_of_element_located((By.XPATH, "/html/body/app-root/div/div/app-address-detail/div[1]/div/div[5]/div"))
+            )
+            balance_text = balance_element.text.strip()
 
-            # Parse the response
-            result = response.json()
-            if 'error' in result:
-                self.logger.error(f"RPC Error: {result['error']}")
-                return {'valid': False, 'error': result['error']}
-            return result['result']  # Adjust based on the actual response structure
+            # ✅ Remove commas and "SKY" text
+            balance_text = balance_text.replace(",", "").replace("SKY", "").strip()
+            balance_value = float(balance_text)
+
+            self.logger.info(f"[SCRAPING SUCCESS] Address: {address} | Balance: {balance_value} NESS")
+
+            return balance_value >= minimum_ness
 
         except Exception as e:
-            self.logger.error(f"Transaction validation error: {e}")
-            return {'valid': False, 'error': str(e)}
+            self.logger.error(f"[SCRAPING FAILED] Address: {address} | Error: {e}")
+            return False
 
     def check_wallet_balance(self, address: str, minimum_ness: float) -> bool:
         """
-        Check wallet balance via the RPC interface.
-
-        Args:
-            address (str): The wallet address to check.
-            minimum_ness (float): The minimum NESS balance required.
-
-        Returns:
-            bool: True if the balance is sufficient, False otherwise.
+        Checks if the sender's wallet has at least `minimum_ness`.
+        Uses Selenium scraping.
         """
-        try:
-            # Construct the RPC request payload for checking balance
-            payload = {
-                "jsonrpc": "2.0",
-                "method": "get_wallet_balance",  # Replace with the actual method name
-                "params": {
-                    "address": address
-                },
-                "id": 1
-            }
+        self.logger.info(f"[BALANCE CHECK] Verifying NESS balance for: {address}")
+        return self.scrape_wallet_balance(address, minimum_ness)
 
-            # Send the RPC request
-            response = requests.post(self.rpc_url, json=payload)
-            response.raise_for_status()  # Raise an error for bad responses
-
-            # Parse the response
-            result = response.json()
-            if 'error' in result:
-                self.logger.error(f"RPC Error: {result['error']}")
-                return False
-            
-            # Check if the balance meets the minimum requirement
-            balance = float(result.get('result', {}).get('ness_balance', 0))
-            return balance >= minimum_ness
-
-        except Exception as e:
-            self.logger.error(f"Balance check error for {address}: {e}")
-            return False
+    def __del__(self):
+        """
+        Ensures Selenium WebDriver is properly closed when the instance is deleted.
+        """
+        self.driver.quit()  # ✅ Keep Selenium cleanup

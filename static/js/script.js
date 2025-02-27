@@ -11,8 +11,16 @@
     // Centralized Configuration
     const CONFIG = {
         PAYMENT: {
-            ADDRESS: "2kGY2fECeGbaQWnq2QvZ9L7ng7QkerUraMn",
-            REQUIRED_NCH: 3000,
+            ADDRESS: "# Address goes here",
+            PAYMENT_ADDRESS_DOGE_SPOT_BINANCE: "# Address goes here",
+            PAYMENT_ADDRESS_DOGE_SPOT_KUCOIN: "# Address goes here",
+            PAYMENT_ADDRESS_DOGE_SPOT_OKX: "# Address goes here",
+            PAYMENT_ADDRESS_XRP_SPOT_BINANCE: "# Address goes here",
+            PAYMENT_ADDRESS_DOGE_PERPETUAL_BINANCE: "# Address goes here",
+            PAYMENT_ADDRESS_DOGE_PERPETUAL_KUCOIN: "# Address goes here",
+            PAYMENT_ADDRESS_DOGE_PERPETUAL_OKX: "# Address goes here",
+            PAYMENT_ADDRESS_XRP_PERPETUAL_BINANCE: "# Address goes here",
+            REQUIRED_NCH: 300000,
             MINIMUM_NESS: 4000
         },
         API: {
@@ -87,160 +95,58 @@
 
     // Bot Configurations
     const botConfigurations = {
-        // Bot configurations
         'Doge_Spot_Binance': {
             name: 'Doge Spot Bot (Binance)',
             requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
             minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
+            paymentAddress: CONFIG.PAYMENT.PAYMENT_ADDRESS_DOGE_SPOT_BINANCE,
             botUsername: 'Stoneyard_Doge_Bot'
         },
         'Doge_Spot_Kucoin': {
             name: 'Doge Spot Bot (Kucoin)',
             requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
             minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
+            paymentAddress: CONFIG.PAYMENT.PAYMENT_ADDRESS_DOGE_SPOT_KUCOIN,
             botUsername: 'Stoneyard_Doge_Bot'
         },
         'Doge_Spot_OKX': {
             name: 'Doge Spot Bot (OKX)',
             requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
             minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
+            paymentAddress: CONFIG.PAYMENT.PAYMENT_ADDRESS_DOGE_SPOT_OKX,
             botUsername: 'Stoneyard_Doge_Bot'
         },
-            //XRP
         'XRP_Spot_Binance': {
             name: 'XRP Spot Bot (Binance)',
             requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
             minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
+            paymentAddress: CONFIG.PAYMENT.PAYMENT_ADDRESS_XRP_SPOT_BINANCE,
             botUsername: 'Stoneyard_XRP_Bot'
         },
-        'XRP_Spot_Kucoin': {
-            name: 'XRP Spot Bot (Kucoin)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_XRP_Bot'
-        },
-        'XRP_Spot_OKX': {
-            name: 'XRP Spot Bot (OKX)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_XRP_Bot'
-        },
-
-        'ETH_Spot_Binance': {
-            name: 'ETH Spot Bot (Binance)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_ETH_Bot'
-        },
-        'ETH_Spot_Kucoin': {
-            name: 'ETH Spot Bot (Kucoin)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_ETH_Bot'
-        },
-        'ETH_Spot_OKX': {
-            name: 'ETH Spot Bot (OKX)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_ETH_Bot'
-        },
-
-        'BTC_Spot_Binance': {
-            name: 'BTC Spot Bot (Binance)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_BTC_Bot'
-        },
-        'BTC_Spot_Kucoin': {
-            name: 'BTC Spot Bot (Kucoin)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_BTC_Bot'
-        },
-        'BTC_Spot_OKX': {
-            name: 'BTC Spot Bot (OKX)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_BTC_Bot'
-        },
-
-        'SOL_Spot_Binance': {
-            name: 'SOL Spot Bot (Binance)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_SOL_Bot'
-        },
-        'SOL_Spot_Kucoin': {
-            name: 'SOL Spot Bot (Kucoin)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_SOL_Bot'
-        },
-        'SOL_Spot_OKX': {
-            name: 'SOL Spot Bot (OKX)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_SOL_Bot'
-        },
-
-        'AVAX_Spot_Binance': {
-            name: 'AVAX Spot Bot (Binance)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_AVAX_Bot'
-        },
-        'AVAX_Spot_Kucoin': {
-            name: 'AVAX Spot Bot (Kucoin)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_AVAX_Bot'
-        },
-        'AVAX_Spot_OKX': {
-            name: 'AVAX Spot Bot (OKX)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_AVAX_Bot'
-        },
-
-        // Add all bot configurations following the same pattern
+        
+        
+    
+        // Additional bot configurations following the same pattern
 
         'Doge_Perpetual_Binance': {
             name: 'Doge Perpetual Bot (Binance)',
             requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
             minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
+            paymentAddress: CONFIG.PAYMENT.PAYMENT_ADDRESS_DOGE_PERPETUAL_BINANCE,
             botUsername: 'Stoneyard_Doge_Bot'
         },
         'Doge_Perpetual_Kucoin': {
             name: 'Doge Perpetual Bot (Kucoin)',
             requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
             minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
+            paymentAddress: CONFIG.PAYMENT.PAYMENT_ADDRESS_DOGE_PERPETUAL_KUCOIN,
             botUsername: 'Stoneyard_Doge_Bot'
         },
         'Doge_Perpetual_OKX': {
             name: 'Doge Perpetual Bot (OKX)',
             requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
             minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
+            paymentAddress: CONFIG.PAYMENT.PAYMENT_ADDRESS_DOGE_PERPETUAL_OKX,
             botUsername: 'Stoneyard_Doge_Bot'
         },
 
@@ -248,111 +154,10 @@
             name: 'XRP Perpetual Bot (Binance)',
             requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
             minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
+            paymentAddress: CONFIG.PAYMENT.PAYMENT_ADDRESS_XRP_PERPETUAL_BINANCE,
             botUsername: 'Stoneyard_XRP_Bot'
         },
-        'XRP_Perpetual_Kucoin': {
-            name: 'XRP Perpetual Bot (Kucoin)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_XRP_Bot'
-        },
-        'XRP_Perpetual_OKX': {
-            name: 'XRP Perpetual Bot (OKX)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_XRP_Bot'
-        },
-
-        'ETH_Perpetual_Binance': {
-            name: 'ETH Perpetual Bot (Binance)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_ETH_Bot'
-        },
-        'ETH_Perpetual_Kucoin': {
-            name: 'ETH Perpetual Bot (Kucoin)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_ETH_Bot'
-        },
-        'ETH_Perpetual_OKX': {
-            name: 'ETH Perpetual Bot (OKX)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_ETH_Bot'
-        },
-
-        'BTC_Perpetual_Binance': {
-            name: 'BTC Perpetual Bot (Binance)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_BTC_Bot'
-        },
-        'BTC_Perpetual_Kucoin': {
-            name: 'BTC Perpetual Bot (Kucoin)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_BTC_Bot'
-        },
-        'BTC_Perpetual_OKX': {
-            name: 'BTC Perpetual Bot (OKX)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_BTC_Bot'
-        },
-
-        'SOL_Perpetual_Binance': {
-            name: 'SOL Perpetual Bot (Binance)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_SOL_Bot'
-        },
-        'SOL_Perpetual_Kucoin': {
-            name: 'SOL Perpetual Bot (Kucoin)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_SOL_Bot'
-        },
-        'SOL_Perpetual_OKX': {
-            name: 'SOL Perpetual Bot (OKX)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_SOL_Bot'
-        },
-
-        'AVAX_Perpetual_Binance': {
-            name: 'AVAX Perpetual Bot (Binance)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_AVAX_Bot'
-        },
-        'AVAX_Perpetual_Kucoin': {
-            name: 'AVAX Perpetual Bot (Kucoin)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_AVAX_Bot'
-        },
-        'AVAX_Perpetual_OKX': {
-            name: 'AVAX Perpetual Bot (OKX)',
-            requiredNCH: CONFIG.PAYMENT.REQUIRED_NCH,
-            minimumNESS: CONFIG.PAYMENT.MINIMUM_NESS,
-            paymentAddress: CONFIG.PAYMENT.ADDRESS,
-            botUsername: 'Stoneyard_AVAX_Bot'
-        },
+        
         
         // Continue with other bot configurations
     };
@@ -380,116 +185,14 @@
             botKey: 'Doge_Spot_OKX',
             botUsername: 'Stoneyard_Doge_Bot' 
         },
-
         { 
-            name: 'XRP', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Binance', 
-            botKey: 'XRP_Spot_Binance',
-            botUsername: 'Stoneyard_XRP_Bot' 
-        },
-        { 
-            name: 'XRP', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Kucoin', 
-            botKey: 'XRP_Spot_Kucoin',
-            botUsername: 'Stoneyard_XRP_Bot' 
-        },
-        { 
-            name: 'XRP', 
+            name: 'Doge', 
             price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
             exchange: 'OKX', 
-            botKey: 'XRP_Spot_OKX',
-            botUsername: 'Stoneyard_XRP_Bot' 
+            botKey: 'Doge_Spot_OKX',
+            botUsername: 'Stoneyard_Doge_Bot' 
         },
-
-        { 
-            name: 'ETH', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Binance', 
-            botKey: 'ETH_Spot_Binance',
-            botUsername: 'Stoneyard_ETH_Bot' 
-        },
-        { 
-            name: 'ETH', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Kucoin', 
-            botKey: 'ETH_Spot_Kucoin',
-            botUsername: 'Stoneyard_ETH_Bot' 
-        },
-        { 
-            name: 'ETH', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'OKX', 
-            botKey: 'ETH_Spot_OKX',
-            botUsername: 'Stoneyard_ETH_Bot' 
-        },
-
-        { 
-            name: 'BTC', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Binance', 
-            botKey: 'BTC_Spot_Binance',
-            botUsername: 'Stoneyard_BTC_Bot' 
-        },
-        { 
-            name: 'BTC', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Kucoin', 
-            botKey: 'BTC_Spot_Kucoin',
-            botUsername: 'Stoneyard_BTC_Bot' 
-        },
-        { 
-            name: 'BTC', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'OKX', 
-            botKey: 'BTC_Spot_OKX',
-            botUsername: 'Stoneyard_BTC_Bot' 
-        },
-
-        { 
-            name: 'SOL', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Binance', 
-            botKey: 'SOL_Spot_Binance',
-            botUsername: 'Stoneyard_SOL_Bot' 
-        },
-        { 
-            name: 'SOL', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Kucoin', 
-            botKey: 'SOL_Spot_Kucoin',
-            botUsername: 'Stoneyard_SOL_Bot' 
-        },
-        { 
-            name: 'SOL', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'OKX', 
-            botKey: 'SOL_Spot_OKX',
-            botUsername: 'Stoneyard_SOL_Bot' 
-        },
-
-        { 
-            name: 'AVAX', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Binance', 
-            botKey: 'AVAX_Spot_Binance',
-            botUsername: 'Stoneyard_AVAX_Bot' 
-        },
-        { 
-            name: 'AVAX', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Kucoin', 
-            botKey: 'AVAX_Spot_Kucoin',
-            botUsername: 'Stoneyard_AVAX_Bot' 
-        },
-        { 
-            name: 'AVAX', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'OKX', 
-            botKey: 'AVAX_Spot_OKX',
-            botUsername: 'Stoneyard_AVAX_Bot' 
-        },
+       
         // Add more spot bots
     ];
 
@@ -522,108 +225,6 @@
             exchange: 'Binance', 
             botKey: 'XRP_Perpetual_Binance',
             botUsername: 'Stoneyard_Perpetual_XRP_Bot' 
-        },
-        { 
-            name: 'XRP Perpetual', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Kucoin', 
-            botKey: 'XRP_Perpetual_Kucoin',
-            botUsername: 'Stoneyard_Perpetual_XRP_Bot' 
-        },
-        { 
-            name: 'XRP Perpetual', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'OKX', 
-            botKey: 'XRP_Perpetual_OKX',
-            botUsername: 'Stoneyard_Perpetual_XRP_Bot' 
-        },
-
-        { 
-            name: 'ETH Perpetual', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Binance', 
-            botKey: 'ETH_Perpetual_Binance',
-            botUsername: 'Stoneyard_Perpetual_ETH_Bot' 
-        },
-        { 
-            name: 'ETH Perpetual', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Kucoin', 
-            botKey: 'ETH_Perpetual_Kucoin',
-            botUsername: 'Stoneyard_Perpetual_ETH_Bot' 
-        },
-        { 
-            name: 'ETH Perpetual', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'OKX', 
-            botKey: 'ETH_Perpetual_OKX',
-            botUsername: 'Stoneyard_Perpetual_ETH_Bot' 
-        },
-
-        { 
-            name: 'BTC Perpetual', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Binance', 
-            botKey: 'BTC_Perpetual_Binance',
-            botUsername: 'Stoneyard_Perpetual_BTC_Bot' 
-        },
-        { 
-            name: 'BTC Perpetual', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Kucoin', 
-            botKey: 'BTC_Perpetual_Kucoin',
-            botUsername: 'Stoneyard_Perpetual_BTC_Bot' 
-        },
-        { 
-            name: 'BTC Perpetual', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'OKX', 
-            botKey: 'BTC_Perpetual_OKX',
-            botUsername: 'Stoneyard_Perpetual_BTC_Bot' 
-        },
-
-        { 
-            name: 'SOL Perpetual', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Binance', 
-            botKey: 'SOL_Perpetual_Binance',
-            botUsername: 'Stoneyard_Perpetual_SOL_Bot' 
-        },
-        { 
-            name: 'SOL Perpetual', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Kucoin', 
-            botKey: 'SOL_Perpetual_Kucoin',
-            botUsername: 'Stoneyard_Perpetual_SOL_Bot' 
-        },
-        { 
-            name: 'SOL Perpetual', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'OKX', 
-            botKey: 'SOL_Perpetual_OKX',
-            botUsername: 'Stoneyard_Perpetual_SOL_Bot' 
-        },
-        
-        { 
-            name: 'AVAX Perpetual', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Binance', 
-            botKey: 'AVAX_Perpetual_Binance',
-            botUsername: 'Stoneyard_Perpetual_AVAX_Bot' 
-        },
-        { 
-            name: 'AVAX Perpetual', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'Kucoin', 
-            botKey: 'AVAX_Perpetual_Kucoin',
-            botUsername: 'Stoneyard_Perpetual_AVAX_Bot' 
-        },
-        { 
-            name: 'AVAX Perpetual', 
-            price: `${CONFIG.PAYMENT.REQUIRED_NCH} NCH`, 
-            exchange: 'OKX', 
-            botKey: 'AVAX_Perpetual_OKX',
-            botUsername: 'Stoneyard_Perpetual_AVAX_Bot' 
         },
         // Add more perpetual bots
     ];
@@ -670,12 +271,11 @@
     }
 
 
-    // Show Payment Modal Function
    // Show Payment Modal Function
    function showPaymentModal(botName) {
     // Create the modal HTML
     const modalHtml = `
-        <div class="payment-modal" style="background-color: white; border-radius: 10px; padding: 20px; width: 300px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;">
+        <div class="payment-modal" style="background-color: white; color: #555; border-radius: 10px; padding: 20px; width: 300px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000;">
             <h3 style="margin: 0; font-size: 1.5em;">Access ${botName}</h3>
             <div class="payment-details" style="margin-top: 10px;">
                 <p>Bot Access Requirements:</p>
@@ -685,7 +285,7 @@
                     <button id="copyAddressBtn" style="margin-top: 5px; padding: 5px; background-color: #1e90ff; color: white; border: none; border-radius: 5px; cursor: pointer;">Copy Address</button>
                     <li>Minimum NESS Balance: <strong>${CONFIG.PAYMENT.MINIMUM_NESS}</strong></li>
                 </ul>
-                <input type="text" id="txHash" placeholder="Transaction Hash" style="width: 100%; padding: 10px; margin-top: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                <input type="text" id="txHash" placeholder="Transaction Hash" style="width:92%; padding: 10px; margin-top: 10px; border: 1px solid #ccc; border-radius: 5px;">
                 <button id="verifyPaymentBtn" data-bot-name="${botName}" style="margin-top: 10px; padding: 10px; background-color: #1e90ff; color: white; border: none; border-radius: 5px; cursor: pointer; width: 100%;">Verify Payment</button>
             </div>
             <button id="closeModalBtn" style="margin-top: 10px; padding: 5px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
@@ -725,8 +325,13 @@
         
     }*/
 
-    // Verify Payment Function
+    // Verify Payment Function with Loading Spinner and Auto Close Modal
     function verifyPayment(botName, txHash) {
+        // Disable the verify button and show loading state
+        $('#verifyPaymentBtn').prop('disabled', true).text('Verifying...');
+        // Show loading spinner
+        $('.payment-details').append('<p id="paymentStatus" style="color: #1e90ff; margin-top: 10px;">🔄 Checking transaction...</p>');
+    
         $.ajax({
             url: '/telegram/verify_bot_payment',
             method: 'POST',
@@ -738,19 +343,32 @@
             contentType: 'application/json',
             success: function(response) {
                 if (response.success) {
-                    window.Telegram.WebApp.showAlert(`Access Granted: ${botName}!`, () => {
-                        openBotInterface(botName);
-                    });
+                    $('#paymentStatus').html('✅ Payment Verified! Access Granted.');
+                    // Delay closing modal for user confirmation
+                    setTimeout(() => {
+                        $('.payment-modal').remove(); // Close modal
+                        window.Telegram.WebApp.showAlert(`Access Granted: ${botName}!`, () => {
+                            openBotInterface(botName);
+                        });
+                    }, 2000);
                 } else {
-                    window.Telegram.WebApp.showAlert(`Payment Verification Failed: ${response.message}`);
+                    if (response.message.includes("Explorer unreachable")) {
+                        $('#paymentStatus').html('⚠️ Blockchain explorer seems to be down. Please try again later.');
+                    } else {
+                        $('#paymentStatus').html(`❌ ${response.message}`);
+                    }
+                    $('#verifyPaymentBtn').prop('disabled', false).text('Verify Payment'); // Re-enable button
                 }
             },
             error: function(err) {
                 Logger.error('Payment Verification', err);
-                window.Telegram.WebApp.showAlert('Error verifying payment. Please try again.');
+                $('#paymentStatus').html('❌ Error verifying payment. Please try again.');
+                $('#verifyPaymentBtn').prop('disabled', false).text('Verify Payment'); // Re-enable button
             }
         });
     }
+    
+
 
     // Open Bot Interface Function
     function openBotInterface(botName) {

@@ -6,62 +6,69 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 logger = logging.getLogger(__name__)
 
-# Connect to the database
 def get_db_connection():
+    """
+    Establish a database connection.
+    """
     try:
         conn = sqlite3.connect('users.db', check_same_thread=False)
-        conn.row_factory = sqlite3.Row  # This allows for dictionary-like row access
+        conn.row_factory = sqlite3.Row
         return conn
     except sqlite3.Error as e:
         logger.error(f"Database connection error: {e}")
         return None
-    
-# Add user function
+
 def add_user(telegram_id, username):
+    """
+    Add a new user to the database.
+    """
     conn = get_db_connection()
     if conn:
         try:
             cursor = conn.cursor()
-            cursor.execute('''
-                INSERT INTO users (telegram_id, username)
-                VALUES (?, ?)
-            ''', (telegram_id, username))
+            cursor.execute('INSERT INTO users (telegram_id, username) VALUES (?, ?)', (telegram_id, username))
             conn.commit()
-            logger.info(f"User  added: {username} with ID: {telegram_id}")
+            logger.info(f"User added: {username} with ID: {telegram_id}")
         except sqlite3.Error as e:
             logger.error(f"Error adding user: {e}")
         finally:
             conn.close()
-    else:
-        logger.error("Failed to add user. No connection established.")
 
-
-# Update NESS balance function
-def update_ness_balance(telegram_id, new_balance):
+def log_fallback_usage(tx_hash, method):
     """
-    Update the NESS balance for a user in the database.
-
-    Args:
-        telegram_id (int): The Telegram ID of the user.
-        new_balance (float): The new NESS balance to set.
+    Log when web scraping is used as a fallback.
     """
     conn = get_db_connection()
     if conn:
         try:
             cursor = conn.cursor()
             cursor.execute('''
-                UPDATE users
-                SET ness_balance = ?
-                WHERE telegram_id = ?
-            ''', (new_balance, telegram_id))
+                INSERT INTO fallback_logs (tx_hash, method, timestamp)
+                VALUES (?, ?, ?)
+            ''', (tx_hash, method, datetime.now()))
+            conn.commit()
+            logger.info(f"Fallback method used: {method} for transaction {tx_hash}")
+        except sqlite3.Error as e:
+            logger.error(f"Error logging fallback usage: {e}")
+        finally:
+            conn.close()
+
+def update_ness_balance(telegram_id, new_balance):
+    """
+    Update a user's NESS balance.
+    """
+    conn = get_db_connection()
+    if conn:
+        try:
+            cursor = conn.cursor()
+            cursor.execute('UPDATE users SET ness_balance = ? WHERE telegram_id = ?', (new_balance, telegram_id))
             conn.commit()
             logger.info(f"Updated NESS balance for user ID: {telegram_id} to {new_balance}")
         except sqlite3.Error as e:
             logger.error(f"Error updating NESS balance: {e}")
         finally:
             conn.close()
-    else:
-        logger.error("Failed to update NESS balance. No connection established.")
+
 
 # Initialize the database (create tables if they don't exist)
 def initialize_db():

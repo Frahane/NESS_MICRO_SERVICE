@@ -1,3 +1,8 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
+
 from flask import Flask, render_template, request, jsonify
 from utils.config import Config
 from utils.db_utils import add_user, update_ness_balance, initialize_db
@@ -7,11 +12,23 @@ import threading
 import time
 import logging
 
-# Setup logging as early as possible
+
+# Enable detailed logging (DEBUG mode)
 Config.setup_logging()
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)  # Set logging level to DEBUG
+
+# Ensure logs are printed to the console
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(formatter)
+logger.addHandler(console_handler)
+
+logger.info("Logging system initialized.")
 
 # Create logger for the application
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
 
 def create_app():
     app = Flask(__name__, static_folder=Config.STATIC_FOLDER, template_folder=Config.TEMPLATE_FOLDER)
@@ -139,17 +156,33 @@ def verify_bot_payment():
     
     return jsonify(verification_result)'''
 
-@app.route('/telegram/verify_bot_payment', methods=['POST'])  # Telegram route
+@app.route('/telegram/verify_bot_payment', methods=['POST'])
 def verify_bot_payment():
-    data = request.json
-    telegram_id = data.get('telegram_id')
-    bot_name = data.get('bot_name')
-    tx_hash = data.get('tx_hash')
+    try:
+        data = request.json
+        logger.info(f"[REQUEST] Received data: {data}")  # Log incoming data
+        print(f"[REQUEST] Received data: {data}")  # Debugging print
 
-    # Verify bot access with transaction
-    verification_result = bot_access_manager.verify_bot_access(telegram_id, bot_name, tx_hash)
-    
-    return jsonify(verification_result)
+        bot_name = data.get('bot_name')
+        tx_hash = data.get('tx_hash')
+        telegram_id = data.get('telegram_id')
+
+        if not bot_name or not tx_hash or not telegram_id:
+            return jsonify({"success": False, "message": "Missing required fields."})
+
+        # Call validation function
+        bot_manager = BotAccessManager()
+        result = bot_manager.verify_payment_transaction(telegram_id, bot_name, tx_hash)
+
+        logger.info(f"[RESPONSE] Payment verification result: {result}")
+        print(f"[RESPONSE] Payment verification result: {result}")  # Debugging print
+        return jsonify(result)
+
+    except Exception as e:
+        logger.error(f"[ERROR] Failed to verify payment: {str(e)}")
+        print(f"[ERROR] Failed to verify payment: {str(e)}")  # Debugging print
+        return jsonify({"success": False, "message": "Internal error"})
+
 
 @app.route('/')
 def home():
